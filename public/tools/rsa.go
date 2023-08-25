@@ -20,13 +20,16 @@ func RSAEncrypt(data, publicBytes []byte) ([]byte, error) {
 	}
 
 	// 使用X509将解码之后的数据 解析出来
-	// x509.MarshalPKCS1PublicKey(block):解析之后无法用，所以采用以下方法：ParsePKIXPublicKey
-	keyInit, err := x509.ParsePKIXPublicKey(block.Bytes)
+	//keyInit, err := x509.ParsePKCS1PublicKey(block.Bytes)
+	// :解析之后无法用，所以采用以下方法：ParsePKIXPublicKey
+
+	pubKey, err := x509.ParsePKCS1PublicKey(block.Bytes)
+	//keyInit, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
 		return res, fmt.Errorf("无法加密, 公钥可能不正确, %v", err)
 	}
 	// 使用公钥加密数据
-	pubKey := keyInit.(*rsa.PublicKey)
+	//pubKey := keyInit.(*rsa.PublicKey)
 	res, err = rsa.EncryptPKCS1v15(rand.Reader, pubKey, data)
 	if err != nil {
 		return res, fmt.Errorf("无法加密, 公钥可能不正确, %v", err)
