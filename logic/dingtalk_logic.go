@@ -16,7 +16,7 @@ import (
 type DingTalkLogic struct {
 }
 
-//通过钉钉获取部门信息
+// 通过钉钉获取部门信息
 func (d *DingTalkLogic) SyncDingTalkDepts(c *gin.Context, req interface{}) (data interface{}, rspError interface{}) {
 	// 1.获取所有部门
 	deptSource, err := dingtalk.GetAllDepts()
@@ -78,7 +78,7 @@ func (d DingTalkLogic) AddDepts(group *model.Group) error {
 	return nil
 }
 
-//根据现有数据库同步到的部门信息，开启用户同步
+// 根据现有数据库同步到的部门信息，开启用户同步
 func (d DingTalkLogic) SyncDingTalkUsers(c *gin.Context, req interface{}) (data interface{}, rspError interface{}) {
 	// 1.获取钉钉用户列表
 	staffSource, err := dingtalk.GetAllUsers()
@@ -114,7 +114,7 @@ func (d DingTalkLogic) SyncDingTalkUsers(c *gin.Context, req interface{}) (data 
 			// 先从ldap删除用户
 			err = ildap.User.Delete(user.UserDN)
 			if err != nil {
-				return nil, tools.NewLdapError(fmt.Errorf("在LDAP删除用户失败" + err.Error()))
+				return nil, tools.NewLdapError(fmt.Errorf("在LDAP删除" + user.Nickname + "用户失败" + err.Error()))
 			}
 			// 然后更新MySQL中用户状态
 			err = isql.User.ChangeStatus(int(user.ID), 2)
